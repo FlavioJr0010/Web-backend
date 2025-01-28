@@ -1,20 +1,19 @@
 package br.com.ifba.usuario.service;
 
 import br.com.ifba.usuario.Usuario;
-import br.com.ifba.usuario.repository.UsuarioRepository;
 
 import java.util.List;
 
 public interface UsuarioIService {
 
-    List<Usuario> findAll();
+    public abstract List<Usuario> findAll();
 
-    Usuario findById(Long id);
+    public abstract Usuario findById(Long id);
 
-    Usuario save(Usuario usuario);
+    public abstract Usuario save(Usuario usuario);
 
-    void delete(Long id);
+    public abstract void delete(Long id);
 
-    Usuario update(Long id, Usuario usuario);
+    public abstract Usuario update(Usuario usuario);
 
 }

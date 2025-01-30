@@ -4,15 +4,13 @@ import br.com.ifba.infrastructure.mapper.ObjectMapperUtil;
 import br.com.ifba.usuario.Usuario;
 import br.com.ifba.usuario.dto.UsuarioGetResponseDto;
 import br.com.ifba.usuario.dto.UsuarioPostResponseDto;
-import br.com.ifba.usuario.service.UsuarioIService;
 import br.com.ifba.usuario.service.UsuarioService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.nio.file.Path;
 
 @RestController
 @RequestMapping(path = "/usuarios")
@@ -36,7 +34,7 @@ public class UsuarioController {
     //Função para salvar os dados relacionados ao usuário
     @PostMapping(path = "/save", consumes =  MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> save(@RequestBody UsuarioPostResponseDto usuarioPostResponseDto){
+    public ResponseEntity<?> save(@RequestBody @Valid UsuarioPostResponseDto usuarioPostResponseDto){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(objectMapperUtil.map(usuarioService.save(
                         (objectMapperUtil.map(usuarioPostResponseDto, Usuario.class))), UsuarioGetResponseDto.class));

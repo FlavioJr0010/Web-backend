@@ -4,6 +4,8 @@ import lombok.Value;
 import org.apache.el.util.ExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -11,32 +13,41 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // Classe que trata exceções globais para a aplicação
 @RestControllerAdvice
-public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+public class ApiExceptionHandler {
 
-    /*@Value(value = "${server.error.include-exception}")
-    private boolean printStackTrace;*/
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException methodArgumentNotValidException) {
+        // Lista de campos inválidos
+        List<FieldError> fieldErrors = methodArgumentNotValidException.getBindingResult().getFieldErrors();
 
-    // Manipulador de exceções para BusinessException
-    @ExceptionHandler(BusinessException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST) // Define o status HTTP como 400 (Bad Request)
-    public ResponseEntity<Object> handleBusinessException(
-            final BusinessException businessException,
-            final WebRequest request
-    ) {
-        final String mensagemErro = businessException.getMessage(); // Obtém a mensagem da exceção
+        String fields = fieldErrors.stream()
+                .map(FieldError::getDefaultMessage)
+                .collect(Collectors.joining(", "));
 
-        logger.error(mensagemErro, businessException); // Registra o erro no log
+        // Mensagem detalhada para desenvolvedores
+        String fieldsMessage = methodArgumentNotValidException.getBindingResult().getFieldErrors().stream()
+                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+                .collect(Collectors.joining(", "));
 
-        return buildErrorMessage(
-                businessException,
-                mensagemErro,
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                request);
+        // Criação do mapa de erro
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("timestamp", LocalDateTime.now());
+        errorResponse.put("status", HttpStatus.BAD_REQUEST.value());
+        errorResponse.put("error", "Bad Request, campos inválidos");
+        errorResponse.put("message", "Campos com erro");
+        errorResponse.put("developerMessage", fieldsMessage);
+        errorResponse.put("fields", fields);
+
+        // Retorno da resposta
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     // Método auxiliar para construir a resposta de erro

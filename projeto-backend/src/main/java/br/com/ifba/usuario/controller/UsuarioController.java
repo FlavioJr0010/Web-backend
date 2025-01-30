@@ -1,6 +1,9 @@
 package br.com.ifba.usuario.controller;
 
+import br.com.ifba.infrastructure.mapper.ObjectMapperUtil;
 import br.com.ifba.usuario.Usuario;
+import br.com.ifba.usuario.dto.UsuarioGetResponseDto;
+import br.com.ifba.usuario.dto.UsuarioPostResponseDto;
 import br.com.ifba.usuario.service.UsuarioIService;
 import br.com.ifba.usuario.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -18,20 +21,25 @@ public class UsuarioController {
 
     //Injeção da dependência
     private final UsuarioService usuarioService;
+    private final ObjectMapperUtil objectMapperUtil;
 
     //Função para retornar todos os dados relacionados ao usuário
     @GetMapping(path = "/findall", produces =
             MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findAll(){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(usuarioService.findAll());
+                .body(objectMapperUtil.mapAll(
+                        this.usuarioService.findAll(),
+                        UsuarioGetResponseDto.class));
     }
 
     //Função para salvar os dados relacionados ao usuário
-    @PostMapping(path = "/save", consumes =  "application/json")
-    public ResponseEntity<?> save(@RequestBody Usuario usuario){
+    @PostMapping(path = "/save", consumes =  MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> save(@RequestBody UsuarioPostResponseDto usuarioPostResponseDto){
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(usuarioService.save(usuario));
+                .body(objectMapperUtil.map(usuarioService.save(
+                        (objectMapperUtil.map(usuarioPostResponseDto, Usuario.class))), UsuarioGetResponseDto.class));
     }
 
     //Função para atualizar os dados relacionados ao usuário

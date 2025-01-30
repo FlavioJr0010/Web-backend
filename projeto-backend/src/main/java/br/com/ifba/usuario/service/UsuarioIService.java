@@ -1,19 +1,23 @@
 package br.com.ifba.usuario.service;
 
 import br.com.ifba.usuario.Usuario;
-
 import java.util.List;
 
+// Interface que define os serviços relacionados ao Usuário
 public interface UsuarioIService {
 
-    public abstract List<Usuario> findAll();
+    // Retorna uma lista com todos os usuários
+    List<Usuario> findAll();
 
-    public abstract Usuario findById(Long id);
+    // Busca um usuário pelo ID
+    Usuario findById(Long id);
 
-    public abstract Usuario save(Usuario usuario);
+    // Salva um novo usuário
+    Usuario save(Usuario usuario);
 
-    public abstract void delete(Long id);
+    // Deleta um usuário pelo ID
+    void delete(Long id);
 
-    public abstract Usuario update(Usuario usuario);
-
+    // Atualiza um usuário existente
+    Usuario update(Usuario usuario);
 }

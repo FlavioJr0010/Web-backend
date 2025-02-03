@@ -1,13 +1,16 @@
 package br.com.ifba.usuario.service;
 
 import br.com.ifba.usuario.Usuario;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 // Interface que define os serviços relacionados ao Usuário
 public interface UsuarioIService {
 
     // Retorna uma lista com todos os usuários
-    List<Usuario> findAll();
+   public abstract Page<Usuario> findAll(Pageable pageable);
 
     // Busca um usuário pelo ID
     Usuario findById(Long id);

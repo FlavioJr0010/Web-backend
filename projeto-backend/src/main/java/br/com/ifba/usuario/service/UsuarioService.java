@@ -4,6 +4,8 @@ import br.com.ifba.infrastructure.exception.BusinessException;
 import br.com.ifba.usuario.Usuario;
 import br.com.ifba.usuario.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +22,9 @@ public class UsuarioService implements UsuarioIService {
 
     // Recupera todos os usuários cadastrados
     @Override
-    public List<Usuario> findAll() {
+    public Page<Usuario> findAll(Pageable pageable) {
         try {
-            return usuarioRepository.findAll();
+            return usuarioRepository.findAll(pageable);
         } catch (Exception e) {
             throw new BusinessException("Erro ao buscar todos os usuários", e);
         }

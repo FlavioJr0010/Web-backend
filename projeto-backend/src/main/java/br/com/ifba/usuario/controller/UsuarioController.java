@@ -7,6 +7,8 @@ import br.com.ifba.usuario.dto.UsuarioPostResponseDto;
 import br.com.ifba.usuario.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +26,10 @@ public class UsuarioController {
     //Função para retornar todos os dados relacionados ao usuário
     @GetMapping(path = "/findall", produces =
             MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> findAll(){
+    public ResponseEntity<Page<UsuarioGetResponseDto>> findAll(Pageable pageable){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(objectMapperUtil.mapAll(
-                        this.usuarioService.findAll(),
-                        UsuarioGetResponseDto.class));
+                .body(this.usuarioService.findAll(pageable).map(c -> objectMapperUtil
+                        .map(c, UsuarioGetResponseDto.class)));
     }
 
     //Função para salvar os dados relacionados ao usuário

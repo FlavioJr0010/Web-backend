@@ -43,6 +43,16 @@ public class UsuarioService implements UsuarioIService {
     }
 
     @Override
+    @Transactional
+    public Optional<Usuario> findByLoginAndSenha(String login, String senha) {
+        try {
+            return usuarioRepository.findByLoginAndSenha(login, senha);
+        } catch (Exception e) {
+            throw new BusinessException("Erro ao buscar usuário por login e senha", e);
+        }
+    }
+
+    @Override
     @Transactional // Garante que a operação seja atômica
     public Usuario save(Usuario usuario) {
         try {

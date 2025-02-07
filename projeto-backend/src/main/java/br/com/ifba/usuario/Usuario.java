@@ -5,10 +5,7 @@ import br.com.ifba.infrastructure.entity.PersitenceEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -21,6 +18,7 @@ import java.io.Serializable;
 @Data // Anotação do Lombok que gera automaticamente os getters, setters, equals, hashCode e toString
 @AllArgsConstructor // Anotação Lombok para gerar um construtor com todos os campos
 @NoArgsConstructor // Anotação Lombok para gerar um construtor sem argumentos (padrão)
+@Builder
 public class Usuario extends PersitenceEntity implements Serializable {
 
     // Definição dos campos que representam as colunas da tabela no banco de dados

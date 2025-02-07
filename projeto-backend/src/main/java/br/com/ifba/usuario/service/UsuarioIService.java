@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 // Interface que define os serviços relacionados ao Usuário
 public interface UsuarioIService {
@@ -23,4 +24,6 @@ public interface UsuarioIService {
 
     // Atualiza um usuário existente
     Usuario update(Usuario usuario);
+
+    Optional<Usuario> findByLoginAndSenha(String login, String senha);
 }
